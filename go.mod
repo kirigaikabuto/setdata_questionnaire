@@ -1,4 +1,4 @@
-module github.com/kirigaikabuto/setdata-questionnaire
+module github.com/kirigaikabuto/setdata_questionnaire
 
 go 1.13
 
