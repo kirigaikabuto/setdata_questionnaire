@@ -26,17 +26,17 @@ func (h *httpEndpoints) MakeCreateQuestionEndpoint() func(w http.ResponseWriter,
 		cmd := &CreateQuestionCommand{}
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToAmqpResponse(err))
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
 			return
 		}
 		err = json.Unmarshal(dataBytes, &cmd)
 		if err != nil {
-			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToAmqpResponse(err))
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
 			return
 		}
 		response, err := h.ch.ExecCommand(cmd)
 		if err != nil {
-			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToAmqpResponse(err))
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
 			return
 		}
 		respondJSON(w, http.StatusCreated, response)
@@ -48,17 +48,17 @@ func (h *httpEndpoints) MakeListQuestionEndpoint() func(w http.ResponseWriter, r
 		cmd := &ListQuestionsCommand{}
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToAmqpResponse(err))
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
 			return
 		}
 		err = json.Unmarshal(dataBytes, &cmd)
 		if err != nil {
-			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToAmqpResponse(err))
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
 			return
 		}
 		response, err := h.ch.ExecCommand(cmd)
 		if err != nil {
-			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToAmqpResponse(err))
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
 			return
 		}
 		respondJSON(w, http.StatusCreated, response)
@@ -71,17 +71,17 @@ func (h *httpEndpoints) MakeUpdateQuestionEndpoint() func(w http.ResponseWriter,
 		cmd.Id = r.URL.Query().Get("id")
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToAmqpResponse(err))
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
 			return
 		}
 		err = json.Unmarshal(dataBytes, &cmd)
 		if err != nil {
-			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToAmqpResponse(err))
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
 			return
 		}
 		response, err := h.ch.ExecCommand(cmd)
 		if err != nil {
-			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToAmqpResponse(err))
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
 			return
 		}
 		respondJSON(w, http.StatusCreated, response)
