@@ -11,28 +11,29 @@ type QuestionsService interface {
 }
 
 type questionsService struct {
+	amqpRequest AmqpRequests
 }
 
-func NewQuestionsService() QuestionsService {
-	return &questionsService{}
+func NewQuestionsService(requests AmqpRequests) QuestionsService {
+	return &questionsService{amqpRequest: requests}
 }
 
 func (q *questionsService) CreateQuestion(cmd *CreateQuestionCommand) (*setdata_questionnaire_store.Question, error) {
-	return nil, nil
+	return q.amqpRequest.CreateQuestion(cmd)
 }
 
 func (q *questionsService) UpdateQuestion(cmd *UpdateQuestionsCommand) (*setdata_questionnaire_store.Question, error) {
-	return nil, nil
+	return q.amqpRequest.UpdateQuestion(cmd)
 }
 
 func (q *questionsService) GetQuestion(cmd *GetQuestionCommand) (*setdata_questionnaire_store.Question, error) {
-	return nil, nil
+	return q.amqpRequest.GetQuestion(cmd)
 }
 
 func (q *questionsService) DeleteQuestion(cmd *DeleteQuestionCommand) error {
-	return nil
+	return q.amqpRequest.DeleteQuestion(cmd)
 }
 
 func (q *questionsService) ListQuestions(cmd *ListQuestionsCommand) ([]setdata_questionnaire_store.Question, error) {
-	return nil, nil
+	return q.amqpRequest.ListQuestions(cmd)
 }
