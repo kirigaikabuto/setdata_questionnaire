@@ -2,7 +2,6 @@ package setdata_questionnaire
 
 import (
 	setdata_common "github.com/kirigaikabuto/setdata-common"
-	setdata_questionnaire_store "github.com/kirigaikabuto/setdata-questionnaire-store"
 )
 
 type CreateQuestionCommand struct {
@@ -16,7 +15,10 @@ func (cmd *CreateQuestionCommand) Exec(svc interface{}) (interface{}, error) {
 }
 
 type UpdateQuestionsCommand struct {
-	*setdata_questionnaire_store.QuestionUpdate
+	Id     string                  `json:"id"`
+	Name   *string                 `json:"name"`
+	Order  *int                    `json:"order"`
+	Fields *[]setdata_common.Field `json:"fields"`
 }
 
 func (cmd *UpdateQuestionsCommand) Exec(svc interface{}) (interface{}, error) {
