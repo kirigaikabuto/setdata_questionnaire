@@ -56,7 +56,7 @@ func (q *questionsService) AddFieldToQuestion(cmd *AddFieldToQuestionCommand) (*
 	fmt.Println("cmd", cmd)
 	fmt.Println(question)
 	cmdUpdate := &UpdateQuestionsCommand{}
-	cmdUpdate.Id = cmd.QuestionId
+	cmdUpdate.Id = question.Id
 	cmdUpdate.Fields = &question.Fields
 	return q.UpdateQuestion(cmdUpdate)
 }
