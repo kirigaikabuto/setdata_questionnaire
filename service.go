@@ -1,6 +1,9 @@
 package setdata_questionnaire
 
-import setdata_questionnaire_store "github.com/kirigaikabuto/setdata-questionnaire-store"
+import (
+	setdata_common "github.com/kirigaikabuto/setdata-common"
+	setdata_questionnaire_store "github.com/kirigaikabuto/setdata-questionnaire-store"
+)
 
 type QuestionsService interface {
 	CreateQuestion(cmd *CreateQuestionCommand) (*setdata_questionnaire_store.Question, error)
@@ -8,6 +11,7 @@ type QuestionsService interface {
 	GetQuestion(cmd *GetQuestionCommand) (*setdata_questionnaire_store.Question, error)
 	DeleteQuestion(cmd *DeleteQuestionCommand) error
 	ListQuestions(cmd *ListQuestionsCommand) ([]setdata_questionnaire_store.Question, error)
+	AddFieldToQuestion(cmd *AddFieldToQuestionCommand) (*setdata_questionnaire_store.Question, error)
 }
 
 type questionsService struct {
@@ -36,4 +40,20 @@ func (q *questionsService) DeleteQuestion(cmd *DeleteQuestionCommand) error {
 
 func (q *questionsService) ListQuestions(cmd *ListQuestionsCommand) ([]setdata_questionnaire_store.Question, error) {
 	return q.amqpRequest.ListQuestions(cmd)
+}
+
+func (q *questionsService) AddFieldToQuestion(cmd *AddFieldToQuestionCommand) (*setdata_questionnaire_store.Question, error) {
+	question, err := q.GetQuestion(&GetQuestionCommand{Id: cmd.QuestionId})
+	if err != nil {
+		return nil, err
+	}
+	question.Fields = append(question.Fields, setdata_common.Field{
+		Name:        cmd.Name,
+		Type:        cmd.Type,
+		Placeholder: cmd.Placeholder,
+	})
+	cmdUpdate := &UpdateQuestionsCommand{}
+	cmdUpdate.Id = cmd.QuestionId
+	cmdUpdate.Fields = &question.Fields
+	return q.UpdateQuestion(cmdUpdate)
 }

@@ -45,3 +45,14 @@ type DeleteQuestionCommand struct {
 func (cmd *DeleteQuestionCommand) Exec(svc interface{}) (interface{}, error) {
 	return nil, svc.(QuestionsService).DeleteQuestion(cmd)
 }
+
+type AddFieldToQuestionCommand struct {
+	QuestionId  string                   `json:"question_id"`
+	Name        string                   `json:"name"`
+	Type        setdata_common.FieldType `json:"type"`
+	Placeholder string                   `json:"placeholder"`
+}
+
+func (cmd *AddFieldToQuestionCommand) Exec(svc interface{}) (interface{}, error) {
+	return svc.(QuestionsService).AddFieldToQuestion(cmd)
+}

@@ -11,6 +11,7 @@ type HttpEndpoints interface {
 	MakeCreateQuestionEndpoint() func(w http.ResponseWriter, r *http.Request)
 	MakeListQuestionEndpoint() func(w http.ResponseWriter, r *http.Request)
 	MakeUpdateQuestionEndpoint() func(w http.ResponseWriter, r *http.Request)
+	MakeAddFieldToQuestionEndpoint() func(w http.ResponseWriter, r *http.Request)
 }
 
 type httpEndpoints struct {
@@ -68,6 +69,32 @@ func (h *httpEndpoints) MakeListQuestionEndpoint() func(w http.ResponseWriter, r
 func (h *httpEndpoints) MakeUpdateQuestionEndpoint() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cmd := &UpdateQuestionsCommand{}
+		id := r.URL.Query().Get("id")
+		cmd.Id = id
+		dataBytes, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
+			return
+		}
+		err = json.Unmarshal(dataBytes, &cmd)
+		if err != nil {
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
+			return
+		}
+		response, err := h.ch.ExecCommand(cmd)
+		if err != nil {
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
+			return
+		}
+		respondJSON(w, http.StatusOK, response)
+	}
+}
+
+func (h *httpEndpoints) MakeAddFieldToQuestionEndpoint() func(w http.ResponseWriter, r *http.Request){
+	return func(w http.ResponseWriter, r *http.Request) {
+		cmd := &AddFieldToQuestionCommand{}
+		id := r.URL.Query().Get("id")
+		cmd.QuestionId = id
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
