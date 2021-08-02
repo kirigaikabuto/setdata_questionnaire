@@ -93,8 +93,6 @@ func (h *httpEndpoints) MakeUpdateQuestionEndpoint() func(w http.ResponseWriter,
 func (h *httpEndpoints) MakeAddFieldToQuestionEndpoint() func(w http.ResponseWriter, r *http.Request){
 	return func(w http.ResponseWriter, r *http.Request) {
 		cmd := &AddFieldToQuestionCommand{}
-		id := r.URL.Query().Get("id")
-		cmd.QuestionId = id
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
