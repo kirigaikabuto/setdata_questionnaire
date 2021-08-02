@@ -68,7 +68,6 @@ func (h *httpEndpoints) MakeListQuestionEndpoint() func(w http.ResponseWriter, r
 func (h *httpEndpoints) MakeUpdateQuestionEndpoint() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cmd := &UpdateQuestionsCommand{}
-		cmd.Id = r.URL.Query().Get("id")
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
@@ -84,7 +83,7 @@ func (h *httpEndpoints) MakeUpdateQuestionEndpoint() func(w http.ResponseWriter,
 			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
 			return
 		}
-		respondJSON(w, http.StatusCreated, response)
+		respondJSON(w, http.StatusOK, response)
 	}
 }
 
