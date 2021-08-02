@@ -1,6 +1,7 @@
 package setdata_questionnaire
 
 import (
+	"fmt"
 	setdata_common "github.com/kirigaikabuto/setdata-common"
 	setdata_questionnaire_store "github.com/kirigaikabuto/setdata-questionnaire-store"
 )
@@ -52,6 +53,8 @@ func (q *questionsService) AddFieldToQuestion(cmd *AddFieldToQuestionCommand) (*
 		Type:        cmd.Type,
 		Placeholder: cmd.Placeholder,
 	})
+	fmt.Println("cmd", cmd)
+	fmt.Println(question)
 	cmdUpdate := &UpdateQuestionsCommand{}
 	cmdUpdate.Id = cmd.QuestionId
 	cmdUpdate.Fields = &question.Fields
