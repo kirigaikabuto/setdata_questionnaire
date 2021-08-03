@@ -72,7 +72,7 @@ func (q *questionsService) AddFieldToQuestion(cmd *AddFieldToQuestionCommand) (*
 
 func (q *questionsService) CreateQuestionnaire(cmd *CreateQuestionnaireCommand) (*setdata_questionnaire_store.Questionnaire, error) {
 	for _, v := range cmd.Questions {
-		_, err := q.GetQuestionnaireById(&GetQuestionnaireByIdCommand{Id: v})
+		_, err := q.amqpRequest.GetQuestionnaireById(&GetQuestionnaireByIdCommand{Id: v})
 		if err != nil {
 			return nil, err
 		}
