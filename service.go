@@ -22,6 +22,7 @@ type QuestionsService interface {
 	DeleteQuestionnaire(cmd *DeleteQuestionnaireByIdCommand) error
 	AddQuestionToQuestionnaire(cmd *AddQuestionToQuestionnaireCommand) (*setdata_questionnaire_store.Questionnaire, error)
 	RemoveQuestionFromQuestionnaire(cmd *RemoveQuestionFromQuestionnaireCommand) (*setdata_questionnaire_store.Questionnaire, error)
+	GetQuestionsByQuestionnaireName(cmd *GetQuestionsByQuestionnaireNameCommand) ([]setdata_questionnaire_store.Question, error)
 }
 
 type questionsService struct {
@@ -170,4 +171,20 @@ func (q *questionsService) RemoveQuestionFromQuestionnaire(cmd *RemoveQuestionFr
 		Name:      nil,
 		Questions: &questions,
 	})
+}
+
+func (q *questionsService) GetQuestionsByQuestionnaireName(cmd *GetQuestionsByQuestionnaireNameCommand) ([]setdata_questionnaire_store.Question, error) {
+	questionnaire, err := q.amqpRequest.GetQuestionnaireByName(&GetQuestionnaireByNameCommand{Name: cmd.Name})
+	if err != nil {
+		return nil, err
+	}
+	questions := []setdata_questionnaire_store.Question{}
+	for _, v := range questionnaire.Questions {
+		q, err := q.amqpRequest.GetQuestion(&GetQuestionCommand{Id: v})
+		if err != nil {
+			return nil, err
+		}
+		questions = append(questions, *q)
+	}
+	return questions, nil
 }

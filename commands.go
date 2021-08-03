@@ -133,3 +133,11 @@ type QuestionnaireDetail struct {
 	Name      string                                 `json:"name"`
 	Questions []setdata_questionnaire_store.Question `json:"questions"`
 }
+
+type GetQuestionsByQuestionnaireNameCommand struct {
+	Name string `json:"name"`
+}
+
+func (cmd *GetQuestionsByQuestionnaireNameCommand) Exec(svc interface{}) (interface{}, error) {
+	return svc.(QuestionsService).GetQuestionsByQuestionnaireName(cmd)
+}

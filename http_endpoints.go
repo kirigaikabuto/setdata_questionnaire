@@ -19,6 +19,7 @@ type HttpEndpoints interface {
 	MakeAddQuestionToQuestionnaireEndpoint() func(w http.ResponseWriter, r *http.Request)
 	MakeDeleteQuestionFromQuestionnaireEndpoint() func(w http.ResponseWriter, r *http.Request)
 	MakeGetQuestionnaireByName(paramName string) func(w http.ResponseWriter, r *http.Request)
+	MakeQuestionsByQuestionnaireName(paramName string) func(w http.ResponseWriter, r *http.Request)
 }
 
 type httpEndpoints struct {
@@ -221,7 +222,35 @@ func (h *httpEndpoints) MakeGetQuestionnaireByName(paramName string) func(w http
 	}
 }
 
+
+func (h *httpEndpoints) MakeQuestionsByQuestionnaireName(paramName string) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params := mux.Vars(r)
+		cmd := &GetQuestionsByQuestionnaireNameCommand{}
+		cmd.Name = params[paramName]
+		dataBytes, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
+			return
+		}
+		err = json.Unmarshal(dataBytes, &cmd)
+		if err != nil {
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
+			return
+		}
+		response, err := h.ch.ExecCommand(cmd)
+		if err != nil {
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
+			return
+		}
+		respondJSON(w, http.StatusOK, response)
+	}
+}
+
 func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
+	(w).Header().Set("Access-Control-Allow-Origin", "*")
+	(w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	response, err := json.Marshal(payload)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
