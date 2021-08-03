@@ -19,7 +19,7 @@ type HttpEndpoints interface {
 	MakeAddQuestionToQuestionnaireEndpoint() func(w http.ResponseWriter, r *http.Request)
 	MakeDeleteQuestionFromQuestionnaireEndpoint() func(w http.ResponseWriter, r *http.Request)
 	MakeGetQuestionnaireByName(paramName string) func(w http.ResponseWriter, r *http.Request)
-	MakeQuestionsByQuestionnaireName(paramName string) func(w http.ResponseWriter, r *http.Request)
+	MakeGetQuestionsByQuestionnaireName(paramName string) func(w http.ResponseWriter, r *http.Request)
 }
 
 type httpEndpoints struct {
@@ -223,7 +223,7 @@ func (h *httpEndpoints) MakeGetQuestionnaireByName(paramName string) func(w http
 }
 
 
-func (h *httpEndpoints) MakeQuestionsByQuestionnaireName(paramName string) func(w http.ResponseWriter, r *http.Request) {
+func (h *httpEndpoints) MakeGetQuestionsByQuestionnaireName(paramName string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		params := mux.Vars(r)
 		cmd := &GetQuestionsByQuestionnaireNameCommand{}
