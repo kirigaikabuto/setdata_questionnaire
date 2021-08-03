@@ -228,16 +228,6 @@ func (h *httpEndpoints) MakeGetQuestionsByQuestionnaireName(paramName string) fu
 		params := mux.Vars(r)
 		cmd := &GetQuestionsByQuestionnaireNameCommand{}
 		cmd.Name = params[paramName]
-		dataBytes, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
-			return
-		}
-		err = json.Unmarshal(dataBytes, &cmd)
-		if err != nil {
-			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
-			return
-		}
 		response, err := h.ch.ExecCommand(cmd)
 		if err != nil {
 			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
