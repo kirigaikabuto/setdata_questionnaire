@@ -20,6 +20,9 @@ type HttpEndpoints interface {
 	MakeDeleteQuestionFromQuestionnaireEndpoint() func(w http.ResponseWriter, r *http.Request)
 	MakeGetQuestionnaireByName(paramName string) func(w http.ResponseWriter, r *http.Request)
 	MakeGetQuestionsByQuestionnaireName(paramName string) func(w http.ResponseWriter, r *http.Request)
+
+	MakeCreateOrderEndpoint() func(w http.ResponseWriter, r *http.Request)
+	MakeListOrderEndpoint(paramName string) func(w http.ResponseWriter, r *http.Request)
 }
 
 type httpEndpoints struct {
@@ -222,12 +225,47 @@ func (h *httpEndpoints) MakeGetQuestionnaireByName(paramName string) func(w http
 	}
 }
 
-
 func (h *httpEndpoints) MakeGetQuestionsByQuestionnaireName(paramName string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		params := mux.Vars(r)
 		cmd := &GetQuestionsByQuestionnaireNameCommand{}
 		cmd.Name = params[paramName]
+		response, err := h.ch.ExecCommand(cmd)
+		if err != nil {
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
+			return
+		}
+		respondJSON(w, http.StatusOK, response)
+	}
+}
+
+func (h *httpEndpoints) MakeCreateOrderEndpoint() func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		cmd := &CreateOrderCommand{}
+		dataBytes, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
+			return
+		}
+		err = json.Unmarshal(dataBytes, &cmd)
+		if err != nil {
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
+			return
+		}
+		response, err := h.ch.ExecCommand(cmd)
+		if err != nil {
+			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
+			return
+		}
+		respondJSON(w, http.StatusOK, response)
+	}
+}
+
+func (h *httpEndpoints) MakeListOrderEndpoint(paramName string) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		params := mux.Vars(r)
+		cmd := &ListOrderCommand{}
+		cmd.QuestionnaireName = params[paramName]
 		response, err := h.ch.ExecCommand(cmd)
 		if err != nil {
 			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))

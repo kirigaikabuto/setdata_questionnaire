@@ -110,3 +110,21 @@ func (r *AmqpRequests) DeleteQuestionnaire(cmd *DeleteQuestionnaireByIdCommand) 
 	}
 	return nil
 }
+
+func (r *AmqpRequests) CreateOrder(cmd *CreateOrderCommand) (*setdata_questionnaire_store.Order, error) {
+	response := &setdata_questionnaire_store.Order{}
+	err := setdata_common.AmqpCall(r.clt, "orders.create", cmd, &response)
+	if err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+func (r *AmqpRequests) ListOrder(cmd *ListOrderCommand) ([]setdata_questionnaire_store.Order, error) {
+	response := []setdata_questionnaire_store.Order{}
+	err := setdata_common.AmqpCall(r.clt, "orders.list", cmd, &response)
+	if err != nil {
+		return nil, err
+	}
+	return response, nil
+}

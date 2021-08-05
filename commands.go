@@ -141,3 +141,20 @@ type GetQuestionsByQuestionnaireNameCommand struct {
 func (cmd *GetQuestionsByQuestionnaireNameCommand) Exec(svc interface{}) (interface{}, error) {
 	return svc.(QuestionsService).GetQuestionsByQuestionnaireName(cmd)
 }
+
+type CreateOrderCommand struct {
+	QuestionnaireName    string                                            `json:"questionnaire_name"`
+	QuestionnaireAnswers []setdata_questionnaire_store.QuestionnaireAnswer `json:"questionnaire_answers"`
+}
+
+func (cmd *CreateOrderCommand) Exec(svc interface{}) (interface{}, error) {
+	return svc.(QuestionsService).CreateOrder(cmd)
+}
+
+type ListOrderCommand struct {
+	QuestionnaireName string `json:"questionnaire_name"`
+}
+
+func (cmd *ListOrderCommand) Exec(svc interface{}) (interface{}, error) {
+	return svc.(QuestionsService).ListOrder(cmd)
+}

@@ -23,6 +23,9 @@ type QuestionsService interface {
 	AddQuestionToQuestionnaire(cmd *AddQuestionToQuestionnaireCommand) (*setdata_questionnaire_store.Questionnaire, error)
 	RemoveQuestionFromQuestionnaire(cmd *RemoveQuestionFromQuestionnaireCommand) (*setdata_questionnaire_store.Questionnaire, error)
 	GetQuestionsByQuestionnaireName(cmd *GetQuestionsByQuestionnaireNameCommand) ([]setdata_questionnaire_store.Question, error)
+
+	CreateOrder(cmd *CreateOrderCommand) (*setdata_questionnaire_store.Order, error)
+	ListOrder(cmd *ListOrderCommand) ([]setdata_questionnaire_store.Order, error)
 }
 
 type questionsService struct {
@@ -187,4 +190,12 @@ func (q *questionsService) GetQuestionsByQuestionnaireName(cmd *GetQuestionsByQu
 		questions = append(questions, *q)
 	}
 	return questions, nil
+}
+
+func (q *questionsService) CreateOrder(cmd *CreateOrderCommand) (*setdata_questionnaire_store.Order, error) {
+	return q.amqpRequest.CreateOrder(cmd)
+}
+
+func (q *questionsService) ListOrder(cmd *ListOrderCommand) ([]setdata_questionnaire_store.Order, error) {
+	return q.amqpRequest.ListOrder(cmd)
 }
