@@ -197,5 +197,9 @@ func (q *questionsService) CreateOrder(cmd *CreateOrderCommand) (*setdata_questi
 }
 
 func (q *questionsService) ListOrder(cmd *ListOrderCommand) ([]setdata_questionnaire_store.Order, error) {
+	err := q.amqpRequest.SendTelegramMessage()
+	if err != nil {
+		return nil, err
+	}
 	return q.amqpRequest.ListOrder(cmd)
 }
