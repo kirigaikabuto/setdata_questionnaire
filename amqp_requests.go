@@ -129,16 +129,7 @@ func (r *AmqpRequests) ListOrder(cmd *ListOrderCommand) ([]setdata_questionnaire
 	return response, nil
 }
 
-func (r *AmqpRequests) SendTelegramMessage() error {
-	cmd := &setdata_questionnaire_store.SendMessageCommand{
-		Message: `<strong>Новая Заявка</strong>
-	<pre>ФИО:<b>Тлеугазы Ерасыл Бауыржанулы</b></pre>
-	<pre>Телефон:<b>87086394516</b></pre>
-	<pre>Email:<b>tleugazy98@gmail.com</b></pre>
-	<pre>Направление:<b>Разработка</b></pre>
-	`,
-		ParseMode: "HTML",
-	}
+func (r *AmqpRequests) SendTelegramMessage(cmd *setdata_questionnaire_store.SendMessageCommand) error {
 	err := setdata_common.AmqpCall(r.clt, "telegram.sendMessage", cmd, nil)
 	if err != nil {
 		return err

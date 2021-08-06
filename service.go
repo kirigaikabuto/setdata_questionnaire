@@ -4,6 +4,7 @@ import (
 	"fmt"
 	setdata_common "github.com/kirigaikabuto/setdata-common"
 	setdata_questionnaire_store "github.com/kirigaikabuto/setdata-questionnaire-store"
+	"strings"
 )
 
 type QuestionsService interface {
@@ -193,13 +194,27 @@ func (q *questionsService) GetQuestionsByQuestionnaireName(cmd *GetQuestionsByQu
 }
 
 func (q *questionsService) CreateOrder(cmd *CreateOrderCommand) (*setdata_questionnaire_store.Order, error) {
-	return q.amqpRequest.CreateOrder(cmd)
-}
-
-func (q *questionsService) ListOrder(cmd *ListOrderCommand) ([]setdata_questionnaire_store.Order, error) {
-	err := q.amqpRequest.SendTelegramMessage()
+	order, err := q.amqpRequest.CreateOrder(cmd)
 	if err != nil {
 		return nil, err
 	}
+	text := ""
+	for _, v := range cmd.QuestionnaireAnswers {
+		text += fmt.Sprintf("<pre>%s<b>%s</b></pre> \n", v.QuestionName, strings.Join(v.Answers, ","))
+	}
+	message := fmt.Sprintf(`<strong>%s</strong>
+	%s
+	`, cmd.QuestionnaireName, text)
+	err = q.amqpRequest.SendTelegramMessage(&setdata_questionnaire_store.SendMessageCommand{
+		Message:   message,
+		ParseMode: "HTML",
+	})
+	if err != nil {
+		return nil, err
+	}
+	return order, nil
+}
+
+func (q *questionsService) ListOrder(cmd *ListOrderCommand) ([]setdata_questionnaire_store.Order, error) {
 	return q.amqpRequest.ListOrder(cmd)
 }
