@@ -200,7 +200,7 @@ func (q *questionsService) CreateOrder(cmd *CreateOrderCommand) (*setdata_questi
 	}
 	text := ""
 	for _, v := range cmd.QuestionnaireAnswers {
-		text += fmt.Sprintf("<pre>%s<b>%s</b></pre> \n", v.QuestionName, strings.Join(v.Answers, ","))
+		text += fmt.Sprintf("<pre>%s:<b>%s</b></pre>", v.QuestionName, strings.Join(v.Answers, " "))
 	}
 	message := fmt.Sprintf(`<strong>%s</strong>
 	%s
