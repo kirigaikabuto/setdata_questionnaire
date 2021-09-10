@@ -243,9 +243,13 @@ func (q *questionsService) SendOrderEmail(cmd *SendOrderEmailCommand) error {
 	if cmd.Email == "" && len(cmd.Email) == 0 {
 		return errors.New("email kerek")
 	}
+	if cmd.PhoneNumber == "" && len(cmd.PhoneNumber) == 0 {
+		return errors.New("phone number kerek")
+	}
 	txt := fmt.Sprintf("<pre><b>%s</b></pre>", "Заявка на заказ")
 	txt += fmt.Sprintf("<pre><b>%s</b></pre><strong>%s</strong>", "Имя:", cmd.Name)
 	txt += fmt.Sprintf("<pre><b>%s</b></pre><strong>%s</strong>", "Email:", cmd.Email)
+	txt += fmt.Sprintf("<pre><b>%s</b></pre><strong>%s</strong>", "Телефон:", cmd.PhoneNumber)
 	err := q.amqpRequest.SendTelegramMessage(&setdata_questionnaire_store.SendMessageCommand{
 		Message:   txt,
 		ParseMode: "HTML",

@@ -169,8 +169,9 @@ func (cmd *SendOrderForConsultationCommand) Exec(svc interface{}) (interface{}, 
 }
 
 type SendOrderEmailCommand struct {
-	Email string `json:"email"`
-	Name  string `json:"name"`
+	Email       string `json:"email"`
+	PhoneNumber string `json:"phone_number"`
+	Name        string `json:"name"`
 }
 
 func (cmd *SendOrderEmailCommand) Exec(svc interface{}) (interface{}, error) {
