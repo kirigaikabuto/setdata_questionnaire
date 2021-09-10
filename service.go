@@ -1,6 +1,7 @@
 package setdata_questionnaire
 
 import (
+	"errors"
 	"fmt"
 	setdata_common "github.com/kirigaikabuto/setdata-common"
 	setdata_questionnaire_store "github.com/kirigaikabuto/setdata-questionnaire-store"
@@ -27,6 +28,7 @@ type QuestionsService interface {
 
 	CreateOrder(cmd *CreateOrderCommand) (*setdata_questionnaire_store.Order, error)
 	ListOrder(cmd *ListOrderCommand) ([]setdata_questionnaire_store.Order, error)
+	SendOrderForConsultation(cmd *SendOrderForConsultationCommand) error
 }
 
 type questionsService struct {
@@ -217,4 +219,21 @@ func (q *questionsService) CreateOrder(cmd *CreateOrderCommand) (*setdata_questi
 
 func (q *questionsService) ListOrder(cmd *ListOrderCommand) ([]setdata_questionnaire_store.Order, error) {
 	return q.amqpRequest.ListOrder(cmd)
+}
+
+func (q *questionsService) SendOrderForConsultation(cmd *SendOrderForConsultationCommand) error {
+	if cmd.PhoneNumber == "" && len(cmd.PhoneNumber) == 0 {
+		return errors.New("phone number kerek")
+	}
+	txt := "Заявка на консультацию"
+	txt += fmt.Sprintf("<strong>%s</strong>", cmd.Name)
+	txt += fmt.Sprintf("<strong>%s</strong>", cmd.PhoneNumber)
+	err := q.amqpRequest.SendTelegramMessage(&setdata_questionnaire_store.SendMessageCommand{
+		Message:   txt,
+		ParseMode: "HTML",
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }

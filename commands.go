@@ -158,3 +158,12 @@ type ListOrderCommand struct {
 func (cmd *ListOrderCommand) Exec(svc interface{}) (interface{}, error) {
 	return svc.(QuestionsService).ListOrder(cmd)
 }
+
+type SendOrderForConsultationCommand struct {
+	PhoneNumber string `json:"phone_number"`
+	Name        string `json:"name"`
+}
+
+func (cmd *SendOrderForConsultationCommand) Exec(svc interface{}) (interface{}, error) {
+	return nil, svc.(QuestionsService).SendOrderForConsultation(cmd)
+}
