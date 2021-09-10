@@ -167,3 +167,12 @@ type SendOrderForConsultationCommand struct {
 func (cmd *SendOrderForConsultationCommand) Exec(svc interface{}) (interface{}, error) {
 	return nil, svc.(QuestionsService).SendOrderForConsultation(cmd)
 }
+
+type SendOrderEmailCommand struct {
+	Email string `json:"email"`
+	Name  string `json:"name"`
+}
+
+func (cmd *SendOrderEmailCommand) Exec(svc interface{}) (interface{}, error) {
+	return nil, svc.(QuestionsService).SendOrderEmail(cmd)
+}

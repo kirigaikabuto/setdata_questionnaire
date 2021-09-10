@@ -29,6 +29,7 @@ type QuestionsService interface {
 	CreateOrder(cmd *CreateOrderCommand) (*setdata_questionnaire_store.Order, error)
 	ListOrder(cmd *ListOrderCommand) ([]setdata_questionnaire_store.Order, error)
 	SendOrderForConsultation(cmd *SendOrderForConsultationCommand) error
+	SendOrderEmail(cmd *SendOrderEmailCommand) error
 }
 
 type questionsService struct {
@@ -225,9 +226,26 @@ func (q *questionsService) SendOrderForConsultation(cmd *SendOrderForConsultatio
 	if cmd.PhoneNumber == "" && len(cmd.PhoneNumber) == 0 {
 		return errors.New("phone number kerek")
 	}
-	txt := "Заявка на консультацию"
-	txt += fmt.Sprintf("<strong>%s</strong>", cmd.Name)
-	txt += fmt.Sprintf("<strong>%s</strong>", cmd.PhoneNumber)
+	txt := fmt.Sprintf("<pre><b>%s</b></pre>", "Заявка на консультацию")
+	txt += fmt.Sprintf("<pre><b>%s</b></pre><strong>%s</strong>", "Имя:", cmd.Name)
+	txt += fmt.Sprintf("<pre><b>%s</b></pre><strong>%s</strong>", "Телефон:", cmd.PhoneNumber)
+	err := q.amqpRequest.SendTelegramMessage(&setdata_questionnaire_store.SendMessageCommand{
+		Message:   txt,
+		ParseMode: "HTML",
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (q *questionsService) SendOrderEmail(cmd *SendOrderEmailCommand) error {
+	if cmd.Email == "" && len(cmd.Email) == 0 {
+		return errors.New("email kerek")
+	}
+	txt := fmt.Sprintf("<pre><b>%s</b></pre>", "Заявка на заказ")
+	txt += fmt.Sprintf("<pre><b>%s</b></pre><strong>%s</strong>", "Имя:", cmd.Name)
+	txt += fmt.Sprintf("<pre><b>%s</b></pre><strong>%s</strong>", "Email:", cmd.Email)
 	err := q.amqpRequest.SendTelegramMessage(&setdata_questionnaire_store.SendMessageCommand{
 		Message:   txt,
 		ParseMode: "HTML",
