@@ -277,10 +277,10 @@ func (h *httpEndpoints) MakeListOrderEndpoint(paramName string) func(w http.Resp
 	}
 }
 
-func(h *httpEndpoints) MakeSendOrderForConsultation() func(w http.ResponseWriter, r *http.Request){
+func (h *httpEndpoints) MakeSendOrderForConsultation() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTIONS" {
-			respondJSON(w, http.StatusOK,nil)
+			respondJSON(w, 204, nil)
 			return
 		}
 		cmd := &SendOrderForConsultationCommand{}
@@ -303,7 +303,7 @@ func(h *httpEndpoints) MakeSendOrderForConsultation() func(w http.ResponseWriter
 	}
 }
 
-func(h *httpEndpoints) MakeSendOrderEmail() func(w http.ResponseWriter, r *http.Request){
+func (h *httpEndpoints) MakeSendOrderEmail() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cmd := &SendOrderEmailCommand{}
 		dataBytes, err := ioutil.ReadAll(r.Body)
