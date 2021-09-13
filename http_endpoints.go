@@ -279,6 +279,10 @@ func (h *httpEndpoints) MakeListOrderEndpoint(paramName string) func(w http.Resp
 
 func(h *httpEndpoints) MakeSendOrderForConsultation() func(w http.ResponseWriter, r *http.Request){
 	return func(w http.ResponseWriter, r *http.Request) {
+		header := w.Header()
+		header.Add("Access-Control-Allow-Origin", "*")
+		header.Add("Access-Control-Allow-Methods", "DELETE, POST, GET, OPTIONS")
+		header.Add("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
 		cmd := &SendOrderForConsultationCommand{}
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -331,6 +335,7 @@ func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
 		w.Write([]byte(err.Error()))
 		return
 	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	w.Write(response)
