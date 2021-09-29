@@ -280,7 +280,7 @@ func (h *httpEndpoints) MakeListOrderEndpoint(paramName string) func(w http.Resp
 func (h *httpEndpoints) MakeSendOrderForConsultation() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTIONS" {
-			respondJSON(w, 204, nil)
+			respondJSON(w, http.StatusOK, nil)
 			return
 		}
 		cmd := &SendOrderForConsultationCommand{}
