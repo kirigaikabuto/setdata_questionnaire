@@ -299,7 +299,7 @@ func (h *httpEndpoints) MakeSendOrderForConsultation() func(w http.ResponseWrite
 			respondJSON(w, http.StatusInternalServerError, setdata_common.ErrToHttpResponse(err))
 			return
 		}
-		respondJSON(w, http.StatusOK, response)
+		respondJSON(w, http.StatusCreated, response)
 	}
 }
 
