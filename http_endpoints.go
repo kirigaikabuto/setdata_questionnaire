@@ -37,6 +37,10 @@ func NewHttpEndpoints(ch setdata_common.CommandHandler) HttpEndpoints {
 
 func (h *httpEndpoints) MakeCreateQuestionEndpoint() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		setupResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
+			return
+		}
 		cmd := &CreateQuestionCommand{}
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -59,6 +63,10 @@ func (h *httpEndpoints) MakeCreateQuestionEndpoint() func(w http.ResponseWriter,
 
 func (h *httpEndpoints) MakeListQuestionEndpoint() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		setupResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
+			return
+		}
 		cmd := &ListQuestionsCommand{}
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -81,6 +89,10 @@ func (h *httpEndpoints) MakeListQuestionEndpoint() func(w http.ResponseWriter, r
 
 func (h *httpEndpoints) MakeUpdateQuestionEndpoint() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		setupResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
+			return
+		}
 		cmd := &UpdateQuestionsCommand{}
 		id := r.URL.Query().Get("id")
 		cmd.Id = id
@@ -105,6 +117,10 @@ func (h *httpEndpoints) MakeUpdateQuestionEndpoint() func(w http.ResponseWriter,
 
 func (h *httpEndpoints) MakeAddFieldToQuestionEndpoint() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		setupResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
+			return
+		}
 		cmd := &AddFieldToQuestionCommand{}
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -127,6 +143,10 @@ func (h *httpEndpoints) MakeAddFieldToQuestionEndpoint() func(w http.ResponseWri
 
 func (h *httpEndpoints) MakeCreateQuestionnaireEndpoint() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		setupResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
+			return
+		}
 		cmd := &CreateQuestionnaireCommand{}
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -149,6 +169,10 @@ func (h *httpEndpoints) MakeCreateQuestionnaireEndpoint() func(w http.ResponseWr
 
 func (h *httpEndpoints) MakeListQuestionnaireEndpoint() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		setupResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
+			return
+		}
 		cmd := &ListQuestionnaireCommand{}
 		response, err := h.ch.ExecCommand(cmd)
 		if err != nil {
@@ -161,6 +185,10 @@ func (h *httpEndpoints) MakeListQuestionnaireEndpoint() func(w http.ResponseWrit
 
 func (h *httpEndpoints) MakeAddQuestionToQuestionnaireEndpoint() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		setupResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
+			return
+		}
 		cmd := &AddQuestionToQuestionnaireCommand{}
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -183,6 +211,10 @@ func (h *httpEndpoints) MakeAddQuestionToQuestionnaireEndpoint() func(w http.Res
 
 func (h *httpEndpoints) MakeDeleteQuestionFromQuestionnaireEndpoint() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		setupResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
+			return
+		}
 		cmd := &RemoveQuestionFromQuestionnaireCommand{}
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -205,6 +237,10 @@ func (h *httpEndpoints) MakeDeleteQuestionFromQuestionnaireEndpoint() func(w htt
 
 func (h *httpEndpoints) MakeGetQuestionnaireByName(paramName string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		setupResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
+			return
+		}
 		params := mux.Vars(r)
 		cmd := &GetQuestionnaireByNameCommand{}
 		cmd.Name = params[paramName]
@@ -229,6 +265,10 @@ func (h *httpEndpoints) MakeGetQuestionnaireByName(paramName string) func(w http
 
 func (h *httpEndpoints) MakeGetQuestionsByQuestionnaireName(paramName string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		setupResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
+			return
+		}
 		params := mux.Vars(r)
 		cmd := &GetQuestionsByQuestionnaireNameCommand{}
 		cmd.Name = params[paramName]
