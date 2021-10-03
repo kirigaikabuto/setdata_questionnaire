@@ -243,6 +243,10 @@ func (h *httpEndpoints) MakeGetQuestionsByQuestionnaireName(paramName string) fu
 
 func (h *httpEndpoints) MakeCreateOrderEndpoint() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		setupResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
+			return
+		}
 		cmd := &CreateOrderCommand{}
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -305,6 +309,10 @@ func (h *httpEndpoints) MakeSendOrderForConsultation() func(w http.ResponseWrite
 
 func (h *httpEndpoints) MakeSendOrderEmail() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+		setupResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
+			return
+		}
 		cmd := &SendOrderEmailCommand{}
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
