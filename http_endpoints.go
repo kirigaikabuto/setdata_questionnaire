@@ -279,8 +279,8 @@ func (h *httpEndpoints) MakeListOrderEndpoint(paramName string) func(w http.Resp
 
 func (h *httpEndpoints) MakeSendOrderForConsultation() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "OPTIONS" {
-			respondJSON(w, http.StatusOK, nil)
+		setupResponse(&w, r)
+		if (*r).Method == "OPTIONS" {
 			return
 		}
 		cmd := &SendOrderForConsultationCommand{}
@@ -325,11 +325,13 @@ func (h *httpEndpoints) MakeSendOrderEmail() func(w http.ResponseWriter, r *http
 	}
 }
 
+func setupResponse(w *http.ResponseWriter, req *http.Request) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+}
+
 func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Credentials" ,"true")
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	response, err := json.Marshal(payload)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
